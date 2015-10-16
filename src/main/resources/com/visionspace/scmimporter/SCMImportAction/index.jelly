@@ -1,0 +1,58 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <j:getStatic var="permission" className="hudson.model.Item" field="CREATE"/>
+  <l:layout norefresh="true" permission="${permission}" title="${%Job.Import.Plugin.Title}">
+    <st:include page="/hudson/model/View/sidepanel.jelly" />
+    <l:main-panel>
+      <style>
+        table.SCMImportPlugin { /* width: 100%; */ }
+        table.SCMImportPlugin th { font-weight: bold; text-align: left; }
+        table.SCMImportPlugin td { text-align: left; }
+      </style>
+        <f:form name="query" action="query" method="get">
+            <f:section title="SCM Import Plugin">
+                <f:entry title="Repository Url" field="repositoryUrl">
+                    <f:textbox/>
+                </f:entry>
+                <f:entry title="Username" field="username">
+                    <f:textbox/>
+                </f:entry>
+                <f:entry title="Password" field="password">
+                    <f:password/>
+                </f:entry>
+            </f:section>
+            <f:block>
+                <input type="submit" value="Query" />
+            </f:block>
+        </f:form>
+        <j:if test="${it.jobsAvailable}">
+            <f:form name="import" action="import" method="post">
+                <f:block>
+                    <table class="SCMImportPlugin" cellpadding="3" cellspacing="3">
+                        <tr>
+                            <th>Import?</th>
+                            <th>Name</th>
+                        </tr>
+                        <j:forEach var="job" items="${it.jobs}">
+                            <tr>
+                                <td>
+                                    <f:checkbox name="jobName" value="${job.getName()}"/>
+                                </td>
+                                <td>
+                                    ${job.getName()}
+                                </td>
+                                <td>
+                                    ${job.getDescription()}
+                                </td>
+                            </tr>
+                        </j:forEach>
+                    </table>
+                </f:block>
+                <f:block>
+                    <span>Overwrite existing jobs?<f:checkbox name="overwrite" value="true"/></span>
+                    <input type="submit" value="Import"/> 
+                </f:block>
+            </f:form>
+        </j:if>
+    </l:main-panel>
+  </l:layout>
+</j:jelly>
