@@ -22,14 +22,22 @@ import org.xml.sax.SAXException;
  */
 public class Job {
     
+    public enum ImportStatus {
+        NOT_SELECTED,
+        IMPORT_SUCCESSFUL,
+        IMPORT_FAILED
+    }
+    
     private String name;
     private String description;
     private File configFile;
+    private ImportStatus importStatus;
     
     public Job(String name, File configFile) {
         this.name = name;
         this.configFile = configFile;
         setDescriptionFromFile();
+        this.importStatus = ImportStatus.NOT_SELECTED;
     }
     
     public String getName() {
@@ -42,6 +50,14 @@ public class Job {
     
     public File getConfigFile() {
         return configFile;
+    }
+    
+    public ImportStatus getImportStatus() {
+        return this.importStatus;
+    }
+    
+    public void setImportStatus(ImportStatus importStatus) {
+        this.importStatus = importStatus;
     }
     
     private void setDescriptionFromFile() {

@@ -57,11 +57,21 @@ public class SCMImportAction implements RootAction{
                     Job job = jobs.get(jobName);
                     try {
                         Jenkins.getInstance().createProjectFromXML(jobName, new FileInputStream(job.getConfigFile()));
+                        job.setImportStatus(Job.ImportStatus.IMPORT_SUCCESSFUL);
                     }catch(IllegalArgumentException e) {
                         if(overwrites){
-                            Jenkins.getInstance().getItem(jobName).delete();
-                            Jenkins.getInstance().createProjectFromXML(jobName, new FileInputStream(job.getConfigFile()));
+                            try {
+                                Jenkins.getInstance().getItem(jobName).delete();
+                                Jenkins.getInstance().createProjectFromXML(jobName, new FileInputStream(job.getConfigFile()));
+                                job.setImportStatus(Job.ImportStatus.IMPORT_SUCCESSFUL);
+                            }catch(Exception ex){
+                                job.setImportStatus(Job.ImportStatus.IMPORT_FAILED);
+                            }
+                        }else {
+                            job.setImportStatus(Job.ImportStatus.IMPORT_FAILED);
                         }
+                    } catch(Exception e) {
+                        job.setImportStatus(Job.ImportStatus.IMPORT_FAILED);
                     }
                 }
             }
