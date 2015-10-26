@@ -11,6 +11,8 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
+  <description>Plugin that allows you to import jobs from a scm repository</description>
+
   <!-- get every artifact through repo.jenkins-ci.org, which proxies all the artifacts that we need -->
   <repositories>
     <repository>
@@ -54,5 +56,17 @@
       <artifactId>maven-scm-provider-gitexe</artifactId>
       <version>1.9.1</version>
     </dependency>
-    </dependencies>
+</dependencies>
+<distributionManagement>
+            <repository>
+                            <id>deployment</id>
+                                        <name>Releases</name>
+                                                    <url>http://resources4.vst:8081/nexus/content/repositories/releases/</url>
+                                                            </repository>
+                                                                    <snapshotRepository>
+                                                                                    <id>deployment</id>
+                                                                                                <name>Snapshots</name>
+                                                                                                            <url>http://resources4.vst:8081/nexus/content/repositories/snapshots/</url>
+                                                                                                                    </snapshotRepository>
+                                                                                                                        </distributionManagement>
 </project>
