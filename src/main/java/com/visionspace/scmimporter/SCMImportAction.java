@@ -42,6 +42,7 @@ public class SCMImportAction implements RootAction{
     private String repositoryUrl;
     private String username, password;
     private Map<String, Job> jobs = new HashMap<String, Job>();
+    private Map<String, Job> importedJobs;
 
     public void doImport(final StaplerRequest request, final StaplerResponse response) throws ServletException,
       IOException,
@@ -49,6 +50,7 @@ public class SCMImportAction implements RootAction{
         
         if(isJobsAvailable()) {
             boolean overwrites = false;
+            importedJobs = new HashMap<String, Job>();
             if(request.hasParameter("overwrite") ){
                 overwrites = true;
             }
@@ -73,9 +75,11 @@ public class SCMImportAction implements RootAction{
                     } catch(Exception e) {
                         job.setImportStatus(Job.ImportStatus.IMPORT_FAILED);
                     }
+                    importedJobs.put(jobName, job);
                 }
             }
         }
+        jobs.clear();
         response.forwardToPreviousPage(request);
     }
    
@@ -85,6 +89,7 @@ public class SCMImportAction implements RootAction{
         username = request.getParameter("_.username");
         password = request.getParameter("_.password");
         
+        importedJobs = null;
         File baseDir  = new File(TMP_DIRECTORY);
         ScmRepository repository= null;
         ScmManager scmManager = new BasicScmManager();
@@ -126,8 +131,16 @@ public class SCMImportAction implements RootAction{
         return jobs.size() > 0;
     }
     
+    public boolean isImported() {
+        return importedJobs != null && importedJobs.size() > 0;
+    }
+    
     public Collection<Job> getJobs() {
         return jobs.values();
+    }
+    
+    public Collection<Job> getImportedJobs() {
+        return importedJobs.values();
     }
     
     @Override

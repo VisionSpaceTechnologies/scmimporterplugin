@@ -63,6 +63,35 @@
                 </f:block>
             </f:form>
         </j:if>
+        <j:if test="${it.imported}">
+            <f:block>
+                <table class="SCMImportPlugin" cellpadding="3" cellspacing="3">
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Import Result</th>
+                    </tr>
+                    <j:forEach var="job" items="${it.importedJobs}">
+                        <tr>
+                            <td>
+                                ${job.getName()}
+                            </td>
+                            <td>
+                                ${job.getDescription()}
+                            </td>
+                            <td>
+                                <j:if test="${job.getImportStatus() == job.ImportStatus.IMPORT_FAILED}">
+                                    Import Failed!
+                                </j:if>
+                                <j:if test="${job.getImportStatus() == job.ImportStatus.IMPORT_SUCCESSFUL}">
+                                    Import Successful!
+                                </j:if>
+                            </td>
+                        </tr>
+                    </j:forEach>
+                </table>
+            </f:block>
+        </j:if>
     </l:main-panel>
   </l:layout>
 </j:jelly>
